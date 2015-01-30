@@ -2,12 +2,13 @@
  * Created by tigran on 1/30/15.
  */
 
-var express = require('express');
+var express = require('express')
+    , config = require("./config");
 
 // Making app available from everywhere without "var"
 app = express();
 mongoose = require("mongoose");
-mongoose.connect('mongodb://127.0.0.1/oneday', function (error) {
+mongoose.connect("dfgdfgdfgdf", function (error) {
     if (error) {
         console.log(error);
     }

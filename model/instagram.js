@@ -5,29 +5,34 @@
 var Schema = mongoose.Schema;
 
 var InstagramSchema = new Schema({
-    id: String,
-    link: String,
-    standard: {
-        width: Number,
-        height: Number,
-        url: String
-    },
-    thumb: {
-        width: Number,
-        height: Number,
-        url: String
-    },
-    small: {
-        width: Number,
-        height: Number,
-        url: String
-    },
-    user: {
-        username: String,
-        fullname: String,
+    index: String,
+    locationHash: String,
+    dateStr: String,
+    images: [{
         id: String,
-        photo: String
-    }
+        link: String,
+        standard: {
+            width: Number,
+            height: Number,
+            url: String
+        },
+        thumb: {
+            width: Number,
+            height: Number,
+            url: String
+        },
+        small: {
+            width: Number,
+            height: Number,
+            url: String
+        },
+        user: {
+            username: String,
+            fullname: String,
+            id: String,
+            photo: String
+        }
+    }]
 });
 
 module.exports = mongoose.model('instagram', InstagramSchema);
