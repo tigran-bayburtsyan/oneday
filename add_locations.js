@@ -76,7 +76,7 @@ mongoose.connection.on("open",function(err) {
 
         cities.push(c);
         console.log(c.name);
-        callback(); // tell async that the iterator has completed
+        callback();
     }, function(err) {
         var save = function() {
             var c = cities.pop();
