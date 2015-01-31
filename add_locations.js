@@ -31,18 +31,7 @@ var db = mongoose.connect(config.MONGO_CONNECTION_STRING, function (error, res) 
 });
 
 mongoose.connection.on("open",function(err) {
-    var cities = [], tmp = [], k=0;
-    for(var i=0; i<= 20; i++)
-    {
-        k++;
-        if(city_json[k]["model"] != "cities.city") {
-            i--;
-            continue;
-        }
-        tmp.push(city_json[i]);
-        console.log(tmp[i]);
-    }
-    async.forEach(tmp, function (cc, callback){
+    async.eachSeries(city_json, function (cc, callback){
         if(cc["model"] != "cities.city") {
             callback();
             return;
@@ -74,18 +63,12 @@ mongoose.connection.on("open",function(err) {
             lng: locs[1]
         });
 
-        cities.push(c);
-        console.log(c.name);
-        callback();
+        c.save(function(){
+            console.log(c.name);
+            if(err) console.log(err);
+            callback();
+        });
     }, function(err) {
-        var save = function() {
-            var c = cities.pop();
-            if (typeof c == "undefined") return;
-            c.save(function (err) {
-                if (err) throw err;
-                save();
-            });
-        };
-        save();
+        console.log("done");
     });
 });
