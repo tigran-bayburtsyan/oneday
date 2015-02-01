@@ -112,18 +112,19 @@ console.log(y.toMysqlFormat());
 
 function GetYoutube(lat, lng, datetime_RFC_3339, callback)
 {
-    Youtube.Search.list({
+    Youtube.search.list({
         "part": "snippet",
         "location": lat.toString() + "," + lng.toString(),
         "locationRadius": "1000km",
         "maxResults": 50,
         "order": "date",
+        "type": "video",
         "publishedAfter": datetime_RFC_3339
     }, function (err, data) {
         callback(err, data);
     });
 }
 
-GetTwitter(37.775, -122.4183333, y.toRFC_3339(), function (error, data) {
-    console.log(data);
+GetYoutube("37.775", "-122.4183333", y.toRFC_3339(), function (error, data) {
+    console.log(error, data["items"].length);
 });
