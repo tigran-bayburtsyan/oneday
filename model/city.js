@@ -15,3 +15,9 @@ var CitySchema = new Schema({
 });
 
 mongoose.model('city', CitySchema);
+
+var CountrySchema = new Schema({
+    name: String
+});
+
+mongoose.model('country', CitySchema);

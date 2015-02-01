@@ -104,15 +104,13 @@ function GetTwitter(lat, lng, mysqlDate, callback)
     })
 }
 
-var y = getYesterday();
-console.log(y.toMysqlFormat());
 //GetTwitter(37.775, -122.4183333, y.toMysqlFormat(), function (error, tweets, response) {
 //
 //});
 
-function GetYoutube(lat, lng, datetime_RFC_3339, callback)
+function GetYoutube(lat, lng, datetime_RFC_3339, pageToken, callback)
 {
-    Youtube.search.list({
+    var req_obj = {
         "part": "snippet",
         "location": lat.toString() + "," + lng.toString(),
         "locationRadius": "1000km",
@@ -120,11 +118,43 @@ function GetYoutube(lat, lng, datetime_RFC_3339, callback)
         "order": "date",
         "type": "video",
         "publishedAfter": datetime_RFC_3339
-    }, function (err, data) {
+    };
+    if(pageToken)
+    {
+        req_obj["pageToken"] = pageToken;
+    }
+    Youtube.search.list(req_obj, function (err, data) {
         callback(err, data);
     });
 }
 
-GetYoutube("37.775", "-122.4183333", y.toRFC_3339(), function (error, data) {
-    console.log(error, data["items"].length);
+//GetYoutube("37.775", "-122.4183333", y.toRFC_3339(), null, function (error, data) {
+//
+//});
+
+require("./model/city");
+var TwitterModel = require("./model/twitter")
+    , InstagramModel = require("./model/instagram")
+    , YoutubeModel = require("./model/youtube")
+    , FlickrModel = require("./model/flickr");
+// Starting Cron
+var City = mongoose.model('city');
+    //, Country = mongoose.model('country');
+
+City.find({"$or": config.SEARCH_COUNTRIES}, function(err, cities){
+
+    //Cron Twitter
+    async.eachSeries(cities, function (city, next) {
+        var y = getYesterday();
+        GetTwitter(city.lat, city.lng, y, function (error, tweets, response) {
+            if(error)
+            {
+
+            }
+        });
+    }, function (err) {
+
+    });
+
+
 });

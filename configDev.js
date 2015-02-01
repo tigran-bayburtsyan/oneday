@@ -10,5 +10,6 @@ module.exports = {
     TWEETER_CONSUMER_SECRET: "",
     TWEETER_ACCESS_TOKEN: "",
     TWEETER_ACCESS_TOKEN_SECRET: "",
-    YOUTUBE_API_KEY: ""
+    YOUTUBE_API_KEY: "",
+    SEARCH_COUNTRIES: [{country: "Country1"}, {country: "Country2"}]
 };
