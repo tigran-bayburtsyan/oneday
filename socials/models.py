@@ -10,8 +10,14 @@ YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
 
 
 # Returns RespDict or Error with True or False if error accurred
-def api_call(url, params):
+def api_call_get(url, params):
     r = requests.get(url=url, params=params)
+    return json.loads(r.text)
+
+
+# Returns RespDict or Error with True or False if error accurred
+def api_call_post(url, params):
+    r = requests.post(url=url, data=params)
     return json.loads(r.text)
 
 
@@ -26,7 +32,7 @@ class Youtube(models.Model):
     # It will give only videos which we don't have in database if we will give " is_unique" parameter to True
     @staticmethod
     def videos_by_location(lat, lng, distance, min_date, is_unique=False):
-        data = api_call(YOUTUBE_SEARCH_URL, {
+        data = api_call_get(YOUTUBE_SEARCH_URL, {
             "part": "snippet",
             "key": keys.YOUTUBE_API_KEY,
             "location": ",".join((str(lat), str(lng))),
@@ -53,3 +59,18 @@ class Youtube(models.Model):
                 y.pub_date = datetime.strptime(str(video["snippet"]["publishedAt"]).replace(".000Z", ""), '%Y-%m-%dT%H:%M:%S')
                 videos.append(video)
         return videos
+
+
+""" Twitter Models """
+
+
+class TwitterHashTag(models.Model):
+    text = models.CharField(max_length=150, default=None, null=False)
+
+
+class Twitter(models.Model):
+    tweet_id = models.CharField(max_length=50, default=None, null=False)
+    text = models.CharField(max_length=150, default=None, null=False)
+    retweet_count = models.IntegerField()
+    hashtags = models.ForeignKey(TwitterHashTag, null=True, blank=True)
+    pub_date = models.DateTimeField(blank=True, default=None, null=True)
