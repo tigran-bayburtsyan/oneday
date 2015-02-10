@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from socials.models import Youtube
+from socials.models import Youtube, Tweet
 from datetime import datetime, date
+import time
 
 
 class Command(BaseCommand):
@@ -8,6 +9,12 @@ class Command(BaseCommand):
     help = 'Type Social Name go grab or just type "all" to grab all socials'
 
     def handle(self, *args, **options):
-        if str(args[0]).lower() == "youtube":
+        soc = str(args[0]).lower()
+        if soc == "youtube":
             videos = Youtube.videos_by_location(37.42307, -122.08427, 100, date.fromordinal(date.today().toordinal()-1))
-            print("Fetched", len(videos), "videos")
+            print(len(videos))
+        elif soc == "tweeter":
+            while True:
+                tweets = Tweet.tweets_by_location(37.42307, -122.08427, 1000, date.fromordinal(date.today().toordinal()-1))
+                print(len(tweets))
+                time.sleep(3)
