@@ -75,13 +75,7 @@ class Tweet(models.Model):
     user_id = models.CharField(max_length=50, default=None, null=False)
 
     @staticmethod
-    def tweets_by_location(lat, lng, distance, min_date, is_unique=False):
-        auth = tweepy.OAuthHandler(keys.TWEETER_CONSUMER_KEY, keys.TWEETER_CONSUMER_SECRET)
-        auth.set_access_token(keys.TWEETER_ACCESS_TOKEN, keys.TWEETER_ACCESS_TOKEN_SECRET)
-        api = tweepy.API(auth)
-        geo_code = str(lat) + "," + str(lng) + "," + str(distance) + "mi"
-        results = api.search(q='', geocode=geo_code
-                             , since=min_date.strftime('%Y-%m-%d'), count=100, result_type="recent")
+    def parse_tweets(results, is_unique):
         tweets = []
         for tweet in results:
             f = 0
@@ -102,6 +96,26 @@ class Tweet(models.Model):
                     h.save()
                 tweets.append(t)
         return tweets
+
+    @staticmethod
+    def tweets_by_location(lat, lng, distance, min_date, is_unique=False):
+        auth = tweepy.OAuthHandler(keys.TWEETER_CONSUMER_KEY, keys.TWEETER_CONSUMER_SECRET)
+        auth.set_access_token(keys.TWEETER_ACCESS_TOKEN, keys.TWEETER_ACCESS_TOKEN_SECRET)
+        api = tweepy.API(auth)
+        geo_code = str(lat) + "," + str(lng) + "," + str(distance) + "mi"
+        results = api.search(q='', geocode=geo_code
+                             , since=min_date.strftime('%Y-%m-%d'), count=100, result_type="recent")
+        return Tweet.parse_tweets(results, is_unique)
+
+    @staticmethod
+    def tweets_by_hashtag(hashtag, lat, lng, distance, min_date, is_unique=False):
+        auth = tweepy.OAuthHandler(keys.TWEETER_CONSUMER_KEY, keys.TWEETER_CONSUMER_SECRET)
+        auth.set_access_token(keys.TWEETER_ACCESS_TOKEN, keys.TWEETER_ACCESS_TOKEN_SECRET)
+        api = tweepy.API(auth)
+        query = "#" + hashtag
+        geo_code = str(lat) + "," + str(lng) + "," + str(distance) + "mi"
+        results = api.search(q=query, geocode=geo_code, since=min_date.strftime('%Y-%m-%d'), count=100, result_type="recent")
+        return Tweet.parse_tweets(results, is_unique)
 
 
 class TwitterHashTag(models.Model):
