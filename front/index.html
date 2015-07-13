@@ -1,20 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="social-news">
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/ng-tags-input.min.css" rel="stylesheet" />
+    <link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet" />
+
     <!-- Jquery Libraries-->
     <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
     <!-- AngularJS files-->
     <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/ng-tags-input.min.js"></script>
 
     <!-- Application files-->
     <script type="text/javascript" src="app/app.js"></script>
-
 </head>
 <body>
+
+<div ng-controller="SearchCtrl">
+    <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
+        <auto-complete source="loadTags($query)"></auto-complete>
+    </tags-input>
+</div>
 
 </body>
 </html>
