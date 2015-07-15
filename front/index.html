@@ -6,6 +6,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/ng-tags-input.min.css" rel="stylesheet" />
     <link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
 
     <!-- Jquery Libraries-->
     <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
@@ -13,17 +14,46 @@
 
     <!-- AngularJS files-->
     <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script type="text/javascript" src="js/ng-tags-input.min.js"></script>
 
     <!-- Application files-->
     <script type="text/javascript" src="app/app.js"></script>
 </head>
 <body>
-
-<div ng-controller="SearchCtrl">
-    <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
-        <auto-complete source="loadTags($query)"></auto-complete>
-    </tags-input>
+<div ng-controller="SearchCtrl" class="container">
+    <div class="row search_box">
+        <div class="col-md-8 col-md-offset-2">
+            <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
+                <auto-complete source="loadTags($query)"></auto-complete>
+            </tags-input>
+        </div>
+    </div>
+    <div class="row search_dates">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row">
+                <div class="col-xs-5">
+                    <p class="input-group">
+                        <input type="text" class="form-control" is-open="search_date.from.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.from.date" max-date="maxDate" ng-required="true" close-text="Close" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                    </p>
+                </div>
+                <div class="col-xs-5">
+                    <p class="input-group">
+                        <input type="text" class="form-control" is-open="search_date.to.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.to.date" max-date="maxDate" ng-required="true" close-text="Close" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                </div>
+                <div class="col-sm-2 col-xs-4">
+                    <button class="btn btn-success btn-block search_btn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
