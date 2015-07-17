@@ -31,7 +31,8 @@ app.controller("SearchCtrl", function ($scope, $http) {
 });
 
 $(function () {
+    var page_container =  $('.container');
     $(window).resize(function () {
-        $('.container').css("marginTop", ($(window).height() - $('.container').height())/2 + "px");
+        page_container.css("marginTop", ($(window).height() - page_container.height())/2 + "px");
     }).resize();
 });
