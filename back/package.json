@@ -1,0 +1,13 @@
+{
+  "name":"oneday",
+  "description":"Twitter JS Client",
+  "version":"0.0.6",
+  "dependencies":{
+    "twitter-node-client": "*",
+    "async": "1.3.*",
+    "express": "4.*",
+    "mongoose": "4.*",
+    "multer": "0.1.8",
+    "body-parser": "1.13.*"
+  }
+}
