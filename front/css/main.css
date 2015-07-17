@@ -7,3 +7,18 @@
 {
     padding-top: 10px;
 }
+
+.panel-heading a
+{
+    text-decoration: none;
+}
+
+.panel-footer .footer_icon
+{
+    cursor: pointer;
+}
+
+.panel-footer .footer_icon:hover
+{
+    color: #8d8d8d;
+}

@@ -22,34 +22,62 @@
 </head>
 <body>
 <div ng-controller="SearchCtrl" class="container">
-    <div class="row search_box">
-        <div class="col-md-8 col-md-offset-2">
-            <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
-                <auto-complete source="loadTags($query)"></auto-complete>
-            </tags-input>
+    <div class="search_box_wrapper">
+        <div class="row search_box">
+            <div class="col-md-8 col-md-offset-2">
+                <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
+                    <auto-complete source="loadTags($query)"></auto-complete>
+                </tags-input>
+            </div>
         </div>
-    </div>
-    <div class="row search_dates">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="row">
-                <div class="col-xs-5">
-                    <p class="input-group">
-                        <input type="text" class="form-control" is-open="search_date.from.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.from.date" max-date="maxDate" ng-required="true" close-text="Close" />
+        <div class="row search_dates">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <p class="input-group">
+                            <input type="text" class="form-control" is-open="search_date.from.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.from.date" max-date="maxDate" ng-required="true" close-text="Close" />
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                           </span>
-                    </p>
-                </div>
-                <div class="col-xs-5">
-                    <p class="input-group">
-                        <input type="text" class="form-control" is-open="search_date.to.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.to.date" max-date="maxDate" ng-required="true" close-text="Close" />
+                        </p>
+                    </div>
+                    <div class="col-xs-5">
+                        <p class="input-group">
+                            <input type="text" class="form-control" is-open="search_date.to.opened" datepicker-popup="dd-MMMM-yyyy" ng-model="search_date.to.date" max-date="maxDate" ng-required="true" close-text="Close" />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                       </span>
-                    </p>
+                        </p>
+                    </div>
+                    <div class="col-sm-2 col-xs-4">
+                        <button class="btn btn-default btn-block search_btn">Search</button>
+                    </div>
                 </div>
-                <div class="col-sm-2 col-xs-4">
-                    <button class="btn btn-success btn-block search_btn">Search</button>
+            </div>
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <div class="result">
+        <div class="row">
+            <div ng-repeat="post in posts" class="col-md-3 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a ng-href="{{post.user.url}}" target="_blank">
+                            <img ng-src="{{post.user.photo}}" height="30">
+                            &nbsp;{{post.user.name}}
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        {{post.content}}
+                    </div>
+                    <div class="panel-footer">
+                        <a ng-href="{{post.url}}" target="_blank"><time class="pull-left">{{post.date}}</time></a>
+                        <span class="pull-right">
+                            <i class="glyphicon glyphicon-star footer_icon" title="Favorite"></i>
+                            &nbsp;<i class="glyphicon glyphicon-share footer_icon" title="Share"></i>
+                        </span>
+                        <div>&nbsp;</div>
+                    </div>
                 </div>
             </div>
         </div>
