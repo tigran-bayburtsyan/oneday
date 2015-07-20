@@ -1,33 +1,51 @@
 var app = angular.module("social-news", ['ngTagsInput', 'ui.bootstrap']);
 
+app.directive("loadingGif", function () {
+    return {
+        restrict: "AEC",
+        scope: {
+            loading_show: "=show"
+        },
+        link: function(scope, attrs, value){
+            scope.$watch('loading_show', function () {
+                if(scope.loading_show)
+                {
+                    $('.overlay').height($(window).height());
+                    $('.overlay').width($(window).width());
+
+                    $('.loading_img').css({
+                        left: ($(window).width() - $('.loading_img').width())/2,
+                        top: ($(window).height() - $('.loading_img').height())/2,
+                    });
+                }
+                else
+                {
+
+                }
+            });
+        },
+        template: '<div class="overlay" ng-show="loading_show"></div><img class="loading_img" src="img/loading.gif" ng-show="loading_show" />'
+    }
+});
+
 app.controller("SearchCtrl", function ($scope, $http) {
     $scope.tags = [];
+    $scope.loading = false;
     $scope.loadTags = function(query) {
         return $http.get('cities.json');
     };
     $scope.added = function(){
-        $scope.posts = [
-            {
-                user: {
-                    name: "Morrisey Video",
-                    url: "https://twitter.com/SethMorrisey",
-                    photo: "https://pbs.twimg.com/profile_images/534943592217726977/a90MLfyk_400x400.jpeg"
-                },
-                content: "Post Content",
-                date: "12:52 PM - 22 Jun 2015",
-                url: "https://twitter.com/SethMorrisey/status/613072157757706240"
-            },
-            {
-                user: {
-                    name: "Morrisey Video",
-                    url: "https://twitter.com/SethMorrisey",
-                    photo: "https://pbs.twimg.com/profile_images/534943592217726977/a90MLfyk_400x400.jpeg"
-                },
-                content: "Post Content",
-                date: "12:52 PM - 22 Jun 2015",
-                url: "https://twitter.com/SethMorrisey/status/613072157757706240"
-            }
-        ];
+        $scope.loading = true;
+        setTimeout(function () {
+            $http.get('posts.json')
+                .success(function (data, status, error) {
+                    $scope.posts = data;
+                    $scope.loading = false;
+                })
+                .error(function () {
+                    $scope.loading = false;
+                });
+        }, 3000);
     };
 
     $scope.maxDate = new Date();

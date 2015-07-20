@@ -24,6 +24,7 @@
 <div ng-controller="SearchCtrl" class="container">
     <div class="search_box_wrapper">
         <div class="row search_box">
+            <loading-gif show="loading"></loading-gif>
             <div class="col-md-8 col-md-offset-2">
                 <tags-input add-from-autocomplete-only="true" on-tag-added="added()" ng-model="tags">
                     <auto-complete source="loadTags($query)"></auto-complete>

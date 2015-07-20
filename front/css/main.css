@@ -22,3 +22,19 @@
 {
     color: #8d8d8d;
 }
+
+.overlay
+{
+    background: #353535;
+    opacity: 0.2;
+    z-index: 10;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.loading_img
+{
+    position: absolute;
+    z-index: 20;
+}
