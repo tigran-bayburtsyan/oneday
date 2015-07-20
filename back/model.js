@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/oneday');
 
 var Country = mongoose.model("Country", {
     name: String,
