@@ -60,7 +60,7 @@
     <p>&nbsp;</p>
     <div class="result">
         <div class="row">
-            <div ng-repeat="post in posts" class="col-md-3 col-sm-6">
+            <div ng-init="repeat_ready($index)" ng-repeat="post in posts" class="col-md-3 col-sm-6 post_div">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <a ng-href="{{post.user.url}}" target="_blank">

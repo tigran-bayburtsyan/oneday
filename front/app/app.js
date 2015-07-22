@@ -78,6 +78,45 @@ app.controller("SearchCtrl", function ($scope, $http) {
             }, 500);
         }
     });
+
+    $scope.repeat_ready = function (index) {
+        if($scope.posts.length == (index+1))
+        {
+            var posts = $('.post_div')
+                , cols = []
+                , width = $(window).width()
+                , col_count = parseInt(width/posts[0].width());
+            for(var j = 0; j< col_count; j++)
+            {
+                cols.push({
+                    left: j * posts[0].width(),
+                    height: 0
+                });
+            }
+
+            for(var i in posts)
+            {
+                var left = 0
+                    , top = 0
+                    , col_index = 0;
+                if(i > 0)
+                {
+                    top = cols[0].height;
+                    for(var j = 0; j< col_count; j++)
+                    {
+                        if(top > cols[i].height)
+                        {
+                            top = cols[i].height;
+                            left = cols[i].left;
+                            col_index = j;
+                        }
+                    }
+                }
+                posts[i].css({left: left, top: top});
+                cols[col_index].height = top + posts[i].height();
+            }
+        }
+    };
 });
 
 $(function () {
