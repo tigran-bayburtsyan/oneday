@@ -44,7 +44,7 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                     , count: 100
                     , result_type: "popular"
                 }, function (err, response, body) {
-                    console.log('ERROR [%s]', err);
+                    console.log('ERROR [%s]', body);
                     setTimeout(function () {
                         cb();
                     }, 2500);
