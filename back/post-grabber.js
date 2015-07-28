@@ -23,6 +23,7 @@ Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate());
 };
 
+var request_index = 0;
 
 Token.findOne({social: "twitter"}, function (err, twitter_keys) {
     var config = {
@@ -36,6 +37,8 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
     async.forever(function (next) {
         City.find({}, function (e, cities) {
             async.eachSeries(cities, function (city, cb) {
+                console.log(request_index);
+                request_index++;
                 var date = new Date();
 
                 twitter.getSearch({
