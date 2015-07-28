@@ -35,7 +35,7 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
 
     async.forever(function (next) {
         City.find({}, function (e, cities) {
-            async.forEach(cities, function (city, cb) {
+            async.eachSeries(cities, function (city, cb) {
                 var date = new Date();
 
                 twitter.getSearch({
@@ -49,7 +49,11 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                         cb();
                     }, 2500);
                 }, function (data) {
-                    async.forEach(data["statuses"], function (post_data, next_post) {
+                    if(typeof data !== 'object')
+                    {
+                        data = JSON.parse(data);
+                    }
+                    async.eachSeries(data["statuses"], function (post_data, next_post) {
                         SocialUser.findOne({user_id: post_data["user"]["id_str"]}, function (uerr, user) {
                             if(uerr)
                             {
@@ -118,7 +122,7 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                                 }
                             }
                         });
-                    }, function () {
+                    }, function (ee) {
                         setTimeout(function () {
                             cb();
                         }, 2500);
