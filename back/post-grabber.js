@@ -125,7 +125,7 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                     }, function (ee) {
                         setTimeout(function () {
                             cb();
-                        }, 2500);
+                        }, 2000);
                     });
                 });
             }, function () {
