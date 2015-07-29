@@ -25,14 +25,25 @@ Date.prototype.toMysqlFormat = function() {
 
 var request_index = 0;
 
-Token.findOne({social: "twitter"}, function (err, twitter_keys) {
-    var config = {
-        "consumerKey": twitter_keys.token_data["consumer_key"],
-        "consumerSecret": twitter_keys.token_data["consumer_secret"],
-        "accessToken": twitter_keys.token_data["access_token"],
-        "accessTokenSecret": twitter_keys.token_data["access_token_secret"]
+Token.find({social: "twitter"}, function (err, twitter_keys) {
+
+    var key_len = twitter_keys.length
+        , key_index = 0;
+
+    var getTwitter = function () {
+        if (key_index == key_len)
+        {
+            key_index = 0;
+        }
+        var config = {
+            "consumerKey": twitter_keys[key_index].token_data["consumer_key"],
+            "consumerSecret": twitter_keys[key_index].token_data["consumer_secret"],
+            "accessToken": twitter_keys[key_index].token_data["access_token"],
+            "accessTokenSecret": twitter_keys[key_index].token_data["access_token_secret"]
+        };
+        key_index++;
+        return new Twitter(config);
     };
-    var twitter = new Twitter(config);
 
     async.forever(function (next) {
         City.find({}, function (e, cities) {
@@ -40,17 +51,18 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                 console.log(request_index);
                 request_index++;
                 var date = new Date();
-
+                // Getting twitter with next API key
+                var twitter = getTwitter();
                 twitter.getSearch({
                     q: 'since:' + date.toMysqlFormat()
-                    , geocode: city.latitude + "," + city.longitude + ",5000mi"
+                    , geocode: city.latitude + "," + city.longitude + ",15000mi"
                     , count: 100
                     , result_type: "popular"
                 }, function (err, response, body) {
                     console.log('ERROR [%s]', body);
                     setTimeout(function () {
                         cb();
-                    }, 2500);
+                    }, 2500/key_len);
                 }, function (data) {
                     if(typeof data !== 'object')
                     {
@@ -128,7 +140,7 @@ Token.findOne({social: "twitter"}, function (err, twitter_keys) {
                     }, function (ee) {
                         setTimeout(function () {
                             cb();
-                        }, 2000);
+                        }, 2500/key_len);
                     });
                 });
             }, function () {
