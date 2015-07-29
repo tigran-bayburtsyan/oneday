@@ -23,16 +23,16 @@ Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate());
 };
 
-var request_index = 0;
+var request_index = 0
+    , getTwitter;
 
 Token.find({social: "twitter"}, function (err, twitter_keys) {
 
     var key_len = twitter_keys.length
         , key_index = 0;
 
-    var getTwitter = function () {
-        if (key_index == key_len)
-        {
+    getTwitter = function () {
+        if (key_index == key_len) {
             key_index = 0;
         }
         var config = {
@@ -62,86 +62,14 @@ Token.find({social: "twitter"}, function (err, twitter_keys) {
                     console.log('ERROR [%s]', body);
                     setTimeout(function () {
                         cb();
-                    }, 2500/key_len);
+                    }, 2500 / key_len);
                 }, function (data) {
-                    if(typeof data !== 'object')
-                    {
-                        data = JSON.parse(data);
-                    }
-                    async.eachSeries(data["statuses"], function (post_data, next_post) {
-                        SocialUser.findOne({user_id: post_data["user"]["id_str"]}, function (uerr, user) {
-                            if(uerr)
-                            {
-                                console.log(err);
-                                next_post(err);
-                            }
-                            else
-                            {
-                                var post_user;
-                                var save_post_fn = function () {
-                                    SocialPost.find({post_id: post_data["id_str"]}, function (perror, found_posts) {
-                                        if (perror)
-                                        {
-                                            console.log(perror);
-                                            next_post(perror);
-                                        }
-                                        else
-                                        {
-                                            if (found_posts.length > 0)
-                                            {
-                                                next_post();
-                                            }
-                                            else
-                                            {
-                                                var p = new SocialPost({
-                                                    content: post_data["text"],
-                                                    user: post_user._id,
-                                                    post_id: post_data["id_str"],
-                                                    url: post_user.url + "/" + post_data["id_str"]
-                                                });
-                                                p.save(function () {
-                                                    console.log("------ " + p.url);
-                                                    next_post();
-                                                });
-                                            }
-                                        }
-                                    });
-                                };
-                                if(user)
-                                {
-                                    post_user = user;
-                                    save_post_fn();
-                                }
-                                else
-                                {
-                                    post_user = new SocialUser({
-                                        user_id: post_data["user"]["id_str"],
-                                        username: post_data["user"]["screen_name"],
-                                        name: post_data["user"]["name"],
-                                        photo: post_data["user"]["profile_image_url_https"],
-                                        social_name: "twitter",
-                                        url: "https://twitter.com/" + post_data["user"]["screen_name"]
-                                    });
-                                    post_user.save(function (save_error) {
-                                        console.log("New User: " + post_user.url);
-                                        if(save_error)
-                                        {
-                                            console.log(save_error);
-                                            next_post(save_error);
-                                        }
-                                        else
-                                        {
-                                            save_post_fn();
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }, function (ee) {
-                        setTimeout(function () {
-                            cb();
-                        }, 2500/key_len);
-                    });
+                    setTimeout(function () {
+                        ParseTwitterData(city, data);
+                    }, 0);
+                    setTimeout(function () {
+                        cb();
+                    }, 2500 / key_len);
                 });
             }, function () {
                 next();
@@ -151,3 +79,86 @@ Token.find({social: "twitter"}, function (err, twitter_keys) {
 
     });
 });
+
+
+function ParseTwitterData(city, data)
+{
+    if(typeof data !== 'object')
+    {
+        data = JSON.parse(data);
+    }
+    async.eachSeries(data["statuses"], function (post_data, next_post) {
+        SocialUser.findOne({user_id: post_data["user"]["id_str"]}, function (uerr, user) {
+            if(uerr)
+            {
+                console.log(err);
+                next_post(err);
+            }
+            else
+            {
+                var post_user;
+                var save_post_fn = function () {
+                    SocialPost.find({post_id: post_data["id_str"]}, function (perror, found_posts) {
+                        if (perror)
+                        {
+                            console.log(perror);
+                            next_post(perror);
+                        }
+                        else
+                        {
+                            if (found_posts.length > 0)
+                            {
+                                next_post();
+                            }
+                            else
+                            {
+                                var p = new SocialPost({
+                                    content: post_data["text"],
+                                    user: post_user._id,
+                                    city: city._id,
+                                    date: post_data["created_at"],
+                                    post_id: post_data["id_str"],
+                                    url: post_user.url + "/" + post_data["id_str"]
+                                });
+                                p.save(function () {
+                                    console.log("------ " + p.url);
+                                    next_post();
+                                });
+                            }
+                        }
+                    });
+                };
+                if(user)
+                {
+                    post_user = user;
+                    save_post_fn();
+                }
+                else
+                {
+                    post_user = new SocialUser({
+                        user_id: post_data["user"]["id_str"],
+                        username: post_data["user"]["screen_name"],
+                        name: post_data["user"]["name"],
+                        photo: post_data["user"]["profile_image_url_https"],
+                        social_name: "twitter",
+                        url: "https://twitter.com/" + post_data["user"]["screen_name"]
+                    });
+                    post_user.save(function (save_error) {
+                        console.log("New User: " + post_user.url);
+                        if(save_error)
+                        {
+                            console.log(save_error);
+                            next_post(save_error);
+                        }
+                        else
+                        {
+                            save_post_fn();
+                        }
+                    });
+                }
+            }
+        });
+    }, function (ee) {
+
+    });
+}

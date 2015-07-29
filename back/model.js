@@ -37,6 +37,9 @@ var SocialUser = mongoose.model("SocialUser", {
 var SocialPost = mongoose.model('SocialPost', {
     content: String,
     user: { type: Schema.Types.ObjectId, ref: 'SocialUser' },
+    city: { type: Schema.Types.ObjectId, ref: 'City' },
+    inserted: { type: Date, default: Date.now },
+    date: String,
     post_id: String,
     url: String,
     image: String  // Url of image in post
