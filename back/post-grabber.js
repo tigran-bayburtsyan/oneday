@@ -57,7 +57,7 @@ Token.find({social: "twitter"}, function (err, twitter_keys) {
                     q: 'since:' + date.toMysqlFormat()
                     , geocode: city.latitude + "," + city.longitude + ",15000mi"
                     , count: 100
-                    , result_type: "popular"
+                    , result_type: "recent"
                 }, function (err, response, body) {
                     console.log('ERROR [%s]', body);
                     setTimeout(function () {
